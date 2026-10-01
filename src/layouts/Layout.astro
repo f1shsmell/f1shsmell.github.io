@@ -188,9 +188,17 @@ const bannerOffset =
 	.enable-banner.is-home #sidebar-sticky {
 		@apply top-[calc(1rem_-_var(--banner-height-extend))]
 	}
+	/* without the banner, stretch the navbar's parent so the sticky navbar stays pinned and can collapse on scroll */
+	body:not(.enable-banner) #top-row {
+		@apply h-screen
+	}
 	.navbar-hidden {
 		@apply opacity-0 -translate-y-16
 	}
+}
+/* unlayered so it wins over the pointer-events-auto utility while the navbar is hidden */
+.navbar-hidden {
+	pointer-events: none;
 }
 </style>
 
@@ -476,16 +484,21 @@ function scrollFunction() {
 		}
 	}
 
-	if (!bannerEnabled) return
 	if (navbar) {
 		const NAVBAR_HEIGHT = 72
 		const MAIN_PANEL_EXCESS_HEIGHT = MAIN_PANEL_OVERLAPS_BANNER_HEIGHT * 16			// The height the main panel overlaps the banner
 
-		let bannerHeight = BANNER_HEIGHT
-		if (document.body.classList.contains('lg:is-home') && window.innerWidth >= 1024) {
-			bannerHeight = BANNER_HEIGHT_HOME
+		let threshold: number
+		if (bannerEnabled) {
+			let bannerHeight = BANNER_HEIGHT
+			if (document.body.classList.contains('lg:is-home') && window.innerWidth >= 1024) {
+				bannerHeight = BANNER_HEIGHT_HOME
+			}
+			threshold = window.innerHeight * (bannerHeight / 100) - NAVBAR_HEIGHT - MAIN_PANEL_EXCESS_HEIGHT - 16
+		} else {
+			// with no banner there is no natural collapse point, so collapse the navbar after a fixed scroll distance
+			threshold = 160
 		}
-		let threshold = window.innerHeight * (bannerHeight / 100) - NAVBAR_HEIGHT - MAIN_PANEL_EXCESS_HEIGHT - 16
 		if (document.body.scrollTop >= threshold || document.documentElement.scrollTop >= threshold) {
 			navbar.classList.add('navbar-hidden')
 		} else {

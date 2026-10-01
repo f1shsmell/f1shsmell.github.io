@@ -6,6 +6,3 @@
 
 - GitHub：[f1shsmell](https://github.com/f1shsmell)
 - 本站基于 [Astro](https://astro.build/) + [Fuwari](https://github.com/saicaca/fuwari) 主题构建，托管于 GitHub Pages
-
-> [!TIP]
-> 把这个页面换成你自己的介绍吧——直接编辑 `src/content/spec/about.md`。

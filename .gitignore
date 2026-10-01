@@ -29,3 +29,6 @@ yarn.lock
 # ide
 .idea
 *.iml
+
+# ZCode 工作目录
+.zcode/
